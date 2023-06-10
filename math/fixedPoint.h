@@ -210,7 +210,7 @@ class FixedPoint : private fixedPointDetail::FixedPointBase {
     FixedPoint operator+(FixedPoint b) const { return FixedPoint(addSaturate(data, b.data)); }
     FixedPoint operator-(const FixedPoint& b) const { return FixedPoint(substractSaturate(data, b.data)); }
     FixedPoint operator*(const FixedPoint& b) const { return FixedPoint(mulSaturate(data, b.data)); }
-    FixedPoint operator/(const FixedPoint& b) const { return FixedPoint(divSaturate(data, b.data)); }
+    constexpr FixedPoint operator/(const FixedPoint& b) const { return FixedPoint(divSaturate(data, b.data)); }
     bool operator==(const FixedPoint& b) const { return data == b.data; }
     template <typename DataBType, size_t integerBBits, size_t fractionalBBits>
     bool operator==(const FixedPoint<DataBType, integerBBits, fractionalBBits>& b) const {
@@ -320,7 +320,7 @@ class FixedPoint : private fixedPointDetail::FixedPointBase {
         return clamp(mul);
     }
 
-    dataType divSaturate(dataType a, dataType b) const {
+    constexpr dataType divSaturate(dataType a, dataType b) const {
         doubleSizeType tmp = doubleSizeType{a} << fractionalBits;
         if ((tmp >= 0 && b >= 0) || (tmp < 0 && b < 0)) {
             tmp += b >> 1;
@@ -331,7 +331,7 @@ class FixedPoint : private fixedPointDetail::FixedPointBase {
         return clamp(div);
     }
 
-    doubleSizeType clamp(doubleSizeType a) const {
+    constexpr doubleSizeType clamp(doubleSizeType a) const {
         return std::clamp(a, doubleSizeType{std::numeric_limits<dataType>::min()}, doubleSizeType(std::numeric_limits<dataType>::max()));
     }
 
